@@ -1,0 +1,41 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "exapp"
+authors = [
+  { name = "Euiyun Edwin Kim", email = "geniuskey@gmail.com" },
+]
+readme = "README.md"
+keywords = [
+  "example",
+  "gui",
+  "application",
+]
+requires-python = ">=3.7"
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dynamic = ["version", "description"]
+dependencies = [
+  "pyqtgraph>=0.12",
+  'colorama>=0.4.4; sys_platform == "win32"',
+  'tomli; python_version < "3.11"',
+]
+urls."Bug Tracker" = "https://github.com/geniuskey/ExApp/issues"
+urls.Documentation = "https://pipx.pypa.io"
+urls.Homepage = "https://pipx.pypa.io"
+urls."Release Notes" = "https://pipx.pypa.io/latest/changelog/"
+urls."Source Code" = "https://github.com/pypa/pipx"
+scripts.pipx = "exapp.main:cli"
+
