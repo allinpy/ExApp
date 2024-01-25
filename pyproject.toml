@@ -4,6 +4,8 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "exapp"
+version = "0.1.0"
+description = "A Python Example Launcher Application"
 authors = [
   { name = "Euiyun Edwin Kim", email = "geniuskey@gmail.com" },
 ]
@@ -26,7 +28,6 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
-dynamic = ["version", "description"]
 dependencies = [
   "pyqtgraph>=0.12",
   'colorama>=0.4.4; sys_platform == "win32"',
@@ -39,5 +40,5 @@ urls."Source Code" = "https://github.com/allinpy/ExApp"
 scripts.pipx = "exapp.main:cli"
 
 
-[tool.flit.metadata.requires-extra]
+[project.optional-dependencies]
 doc = ["sphinx", "sphinx-rtd-theme"]
