@@ -6,7 +6,8 @@ if "%1" == "build" (
 )
 
 if "%1" == "doc" (
-    call .\doc\make.bat html
+    call pandoc --from=markdown --to=rst --output=README.rst README.md
+    call .\doc\source\make.bat html
     goto end
 )
 

@@ -20,9 +20,9 @@ app = pg.mkQApp()
 path = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, path)
 
-import exampleLoaderTemplate_generic as ui_template
-from image_as_py import image_data
-import utils
+import exapp.exampleLoaderTemplate_generic as ui_template
+from exapp.image_as_py import image_data
+from exapp import utils
 
 # based on https://github.com/art1415926535/PyQt5-syntax-highlighting
 
