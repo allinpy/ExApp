@@ -32,10 +32,12 @@ dependencies = [
   'colorama>=0.4.4; sys_platform == "win32"',
   'tomli; python_version < "3.11"',
 ]
-urls."Bug Tracker" = "https://github.com/geniuskey/ExApp/issues"
+urls."Bug Tracker" = "https://github.com/allinpy/ExApp/issues"
 urls.Documentation = "https://pipx.pypa.io"
 urls.Homepage = "https://pipx.pypa.io"
-urls."Release Notes" = "https://pipx.pypa.io/latest/changelog/"
-urls."Source Code" = "https://github.com/pypa/pipx"
+urls."Source Code" = "https://github.com/allinpy/ExApp"
 scripts.pipx = "exapp.main:cli"
 
+
+[tool.flit.metadata.requires-extra]
+doc = ["sphinx", "sphinx-rtd-theme"]
