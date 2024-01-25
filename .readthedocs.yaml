@@ -14,3 +14,7 @@ build:
 sphinx:
   configuration: doc/source/conf.py
   builder: html
+
+python:
+   install:
+   - requirements: doc/source/requirements.txt
