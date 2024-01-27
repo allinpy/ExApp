@@ -1,7 +1,7 @@
 # ExApp
 A Python Example Launcher Application
 
-![](doc/source/_static/ExApp_window.png)
+![](https://github.com/allinpy/ExApp/raw/main/doc/source/_static/ExApp_window.png)
 
 ## Overview
 ExApp is a Python-based application designed to streamline the process of running Python scripts. It's an ideal tool for developers and users who frequently test or demonstrate multiple Python scripts. By simply executing `python -m exapp <target_folder>`, ExApp initiates a user-friendly, explorer-like interface that allows for the seamless execution of .py files located within the specified target folder.
