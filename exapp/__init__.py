@@ -2,4 +2,4 @@ r"""
 ExApp: .py Example launcher application
 """
 
-from .ExampleApp import main_gui
+from .ExampleApp import main_gui, main_cli

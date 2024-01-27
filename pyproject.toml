@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "exapp"
-version = "0.2"
+version = "0.2.1"
 description = "A Python Example Launcher Application"
 authors = [
   { name = "Euiyun Edwin Kim", email = "geniuskey@gmail.com" },
@@ -36,7 +36,7 @@ dependencies = [
 ]
 
 [project.scripts]
-exapp = "exapp.main:cli"
+exapp = "exapp:main_cli"
 
 [project.urls]
 Documentation = "https://exapp.readthedocs.io"
