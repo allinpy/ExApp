@@ -539,6 +539,8 @@ class ExampleLoader(QtWidgets.QMainWindow):
 
     def showFile(self):
         fn = self.currentFile()
+        if fn is None:
+            return
         text = self.getExampleContent(fn)
         self.ui.codeView.setPlainText(text)
         self.ui.loadedFileLabel.setText(os.path.basename(fn))
@@ -589,19 +591,3 @@ class ExampleLoader(QtWidgets.QMainWindow):
         self.ui.codeView.setFont(font)
         self.updateCodeViewTabWidth(font)
         event.accept()
-
-
-def main(dir_path: str = None):
-    if dir_path is None or not os.path.isdir(dir_path):
-        dir_path = os.path.dirname(__file__)
-
-    pg.mkQApp()
-    loader = ExampleLoader(dir_path)
-    loader.ui.exampleTree.setCurrentIndex(
-        loader.ui.exampleTree.model().index(0,0)
-    )
-    pg.exec()
-
-
-if __name__ == '__main__':
-    main()

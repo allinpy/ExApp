@@ -10,6 +10,7 @@ authors = [
   { name = "Euiyun Edwin Kim", email = "geniuskey@gmail.com" },
 ]
 readme = "README.md"
+license = {file = "LICENSE"}
 keywords = [
   "example",
   "gui",
@@ -33,12 +34,18 @@ dependencies = [
   'colorama>=0.4.4; sys_platform == "win32"',
   'tomli; python_version < "3.11"',
 ]
-urls."Bug Tracker" = "https://github.com/allinpy/ExApp/issues"
-urls.Documentation = "https://pipx.pypa.io"
-urls.Homepage = "https://pipx.pypa.io"
-urls."Source Code" = "https://github.com/allinpy/ExApp"
-scripts.pipx = "exapp.main:cli"
+
+[project.scripts]
+exapp = "exapp.main:cli"
+
+[project.urls]
+Homepage = "https://exapp.readthedocs.io"
+Documentation = "https://exapp.readthedocs.io"
+Repository = "https://github.com/allinpy/ExApp.git"
+"Bug Tracker" = "https://github.com/allinpy/ExApp/issues"
+"Source Code" = "https://github.com/allinpy/ExApp"
 
 
 [project.optional-dependencies]
+gui = ["PyQt5", "PySide2"]
 doc = ["sphinx", "sphinx-rtd-theme"]

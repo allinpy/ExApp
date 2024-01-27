@@ -12,9 +12,11 @@ def list_py_files(dir_path) -> OrderedDict:
     directory_structure = OrderedDict()
 
     for item in sorted(os.listdir(dir_path)):
-        full_path = os.path.join(dir_path, item)
+        full_path = os.path.abspath(os.path.join(dir_path, item))
         if os.path.isdir(full_path) and not item.startswith("__"):
-            directory_structure[item] = list_py_files(full_path)
+            dir_files_dict = list_py_files(full_path)
+            if len(dir_files_dict) > 0:
+                directory_structure[item] = list_py_files(full_path)
         elif item.endswith('.py') and not item.startswith("__"):
             directory_structure[item.replace(".py", "")] = full_path
 
