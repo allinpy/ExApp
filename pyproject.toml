@@ -39,11 +39,8 @@ dependencies = [
 exapp = "exapp.main:cli"
 
 [project.urls]
-Homepage = "https://exapp.readthedocs.io"
 Documentation = "https://exapp.readthedocs.io"
 Repository = "https://github.com/allinpy/ExApp.git"
-"Bug Tracker" = "https://github.com/allinpy/ExApp/issues"
-"Source Code" = "https://github.com/allinpy/ExApp"
 
 
 [project.optional-dependencies]
