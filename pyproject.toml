@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "exapp"
-version = "0.1.1"
+version = "0.2"
 description = "A Python Example Launcher Application"
 authors = [
   { name = "Euiyun Edwin Kim", email = "geniuskey@gmail.com" },

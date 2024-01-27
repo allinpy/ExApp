@@ -45,7 +45,12 @@ class Ui_Form(object):
         self.searchFiles.addItem("")
         self.searchFiles.addItem("")
         self.gridLayout.addWidget(self.searchFiles, 1, 0, 1, 2)
-        self.layoutWidget1 = QtWidgets.QWidget(self.splitter)
+
+        self.splitter2 = QtWidgets.QSplitter(self.splitter)
+        self.splitter2.setOrientation(QtCore.Qt.Orientation.Vertical)
+        self.splitter2.setObjectName("splitter2")
+
+        self.layoutWidget1 = QtWidgets.QWidget(self.splitter2)
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget1)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -64,7 +69,12 @@ class Ui_Form(object):
         self.codeView.setFont(font)
         self.codeView.setObjectName("codeView")
         self.verticalLayout.addWidget(self.codeView)
+        self.consoleView = QtWidgets.QPlainTextEdit(self.splitter2)
+        self.consoleView.setObjectName("consoleView")
+        self.consoleView.setReadOnly(True)
         self.gridLayout_2.addWidget(self.splitter, 1, 0, 1, 1)
+        self.splitter2.setStretchFactor(0, 3)
+        self.splitter2.setStretchFactor(1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

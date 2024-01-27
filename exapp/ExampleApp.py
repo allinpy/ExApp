@@ -4,8 +4,9 @@ import os
 import pkgutil
 import re
 import subprocess
+import datetime
 import sys
-from argparse import Namespace
+from argparse import Namespace, ArgumentParser
 from collections import OrderedDict
 from functools import lru_cache
 import base64
@@ -306,13 +307,13 @@ class ExampleLoader(QtWidgets.QMainWindow):
     bindings = {'PyQt6': 0, 'PySide6': 1, 'PyQt5': 2, 'PySide2': 3}
     modules = tuple(m.name for m in pkgutil.iter_modules())
 
-    def __init__(self, dir_path):
+    def __init__(self, dir_path, title: str = "ExApp"):
         QtWidgets.QMainWindow.__init__(self)
         self.ui = ui_template.Ui_Form()
         self.cw = QtWidgets.QWidget()
         self.setCentralWidget(self.cw)
         self.ui.setupUi(self.cw)
-        self.setWindowTitle("ExApp")
+        self.setWindowTitle(title)
         self.codeBtn = QtWidgets.QPushButton('Run Edited Code')
         self.codeLayout = QtWidgets.QGridLayout()
         self.ui.codeView.setLayout(self.codeLayout)
@@ -334,6 +335,8 @@ class ExampleLoader(QtWidgets.QMainWindow):
         pixmap = QPixmap()
         pixmap.loadFromData(base64.b64decode(image_data))
         self.setWindowIcon(QIcon(pixmap))
+
+        self.showWelcome()
 
         def onComboChanged(searchType):
             if self.curListener is not None:
@@ -521,13 +524,15 @@ class ExampleLoader(QtWidgets.QMainWindow):
     def loadFile(self, *, edited=False):
         # make *edited* keyword-only so it is not confused for extra arguments
         # sent by ui signals
+        fn = "Edited Code"
         qtLib = self.ui.qtLibCombo.currentText()
         env = dict(os.environ, PYQTGRAPH_QT_LIB=qtLib)
         example_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.dirname(os.path.dirname(example_path))
         env['PYTHONPATH'] = f'{path}'
         if edited:
-            proc = subprocess.Popen([sys.executable, '-'], stdin=subprocess.PIPE, cwd=example_path, env=env)
+            proc = subprocess.Popen([sys.executable, '-'], stdin=subprocess.PIPE, cwd=example_path, env=env,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             code = self.ui.codeView.toPlainText().encode('UTF-8')
             proc.stdin.write(code)
             proc.stdin.close()
@@ -535,7 +540,15 @@ class ExampleLoader(QtWidgets.QMainWindow):
             fn = self.currentFile()
             if fn is None:
                 return
-            subprocess.Popen([sys.executable, fn], cwd=path, env=env)
+            proc = subprocess.Popen([sys.executable, fn], cwd=path, env=env,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        stdout, stderr = proc.communicate()
+        hhmmss = datetime.datetime.now().strftime("%H:%M:%S")
+        self.ui.consoleView.appendPlainText(f"[{hhmmss}] Run {fn}")
+        self.ui.consoleView.appendPlainText(stdout.decode("utf-8"))
+        if stderr != b'':
+            self.ui.consoleView.appendPlainText(stderr.decode("utf-8"))
 
     def showFile(self):
         fn = self.currentFile()
@@ -546,6 +559,26 @@ class ExampleLoader(QtWidgets.QMainWindow):
         self.ui.loadedFileLabel.setText(os.path.basename(fn))
         self.codeBtn.hide()
 
+    def showWelcome(self, text: str = ""):
+        if text == "":
+            text = """👋 Welcome to ExApp!! 🚀
+=====================================
+A Python Example Launcher Application
+
+ExApp is a Python-based application designed to streamline the process of running Python scripts. It’s an ideal tool for developers and users who frequently test or demonstrate multiple Python scripts.
+Enjoy ExApp. 😁
+
+Short cuts
+-------------------------------------
+ * Increase Font Size: Ctrl + '+' (On macOS: Command + '+')
+ * Decrease Font Size: Ctrl + '-' (On macOS: Command + '-')
+ * Reset    Font Size: Ctrl + '0' (On macOS: Command + '0')
+ * Run      Code     : F5
+"""
+        self.ui.codeView.setPlainText(text)
+        self.ui.loadedFileLabel.setText("Welcome")
+        self.codeBtn.hide()
+
     @lru_cache(100)
     def getExampleContent(self, filename):
         if filename is None:
@@ -553,8 +586,11 @@ class ExampleLoader(QtWidgets.QMainWindow):
             return
         if os.path.isdir(filename):
             filename = os.path.join(filename, '__main__.py')
-        with open(filename, "r", encoding="utf-8") as currentFile:
-            text = currentFile.read()
+        if os.path.isfile(filename):
+            with open(filename, "r", encoding="utf-8") as currentFile:
+                text = currentFile.read()
+        else:
+            text = f"{filename}"
         return text
 
     def codeEdited(self):
@@ -565,10 +601,16 @@ class ExampleLoader(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
-        if not (event.modifiers() & QtCore.Qt.KeyboardModifier.ControlModifier):
-            return
         key = event.key()
         Key = QtCore.Qt.Key
+
+        if key == Key.Key_F5:
+            if self.ui.loadBtn.isVisible():
+                self.runEditedCode()
+            else:
+                self.loadFile()
+        if not (event.modifiers() & QtCore.Qt.KeyboardModifier.ControlModifier):
+            return
 
         # Allow quick navigate to search
         if key == Key.Key_F:
@@ -581,13 +623,38 @@ class ExampleLoader(QtWidgets.QMainWindow):
         font = self.ui.codeView.font()
         oldSize = font.pointSize()
         if key == Key.Key_Plus or key == Key.Key_Equal:
-            font.setPointSize(oldSize + max(oldSize*.15, 1))
+            font.setPointSize(oldSize + 1)
         elif key == Key.Key_Minus or key == Key.Key_Underscore:
-            newSize = oldSize - max(oldSize*.15, 1)
-            font.setPointSize(max(newSize, 1))
+            font.setPointSize(max(oldSize - 1, 1))
         elif key == Key.Key_0:
             # Reset to original size
             font.setPointSize(10)
         self.ui.codeView.setFont(font)
         self.updateCodeViewTabWidth(font)
         event.accept()
+
+
+def main_gui(dir_path: str, title: str = "ExApp"):
+    if dir_path is None or not os.path.isdir(dir_path):
+        dir_path = os.getcwd()
+
+    pg.mkQApp()
+    loader = ExampleLoader(dir_path, title=title)
+    loader.ui.exampleTree.setCurrentIndex(
+        loader.ui.exampleTree.model().index(0, 0)
+    )
+    pg.exec()
+
+
+def main_cli():
+    parser = ArgumentParser(description="ExApp CLI interface")
+    parser.add_argument("dir_path", help="directory path contains .py example files",
+                        nargs='?', default=os.getcwd())
+    parser.add_argument("-t", "--title", help="Specify a title as an option", default="ExApp")
+    args = parser.parse_args()
+    dir_path = args.dir_path
+
+    if dir_path is None or not os.path.isdir(dir_path):
+        dir_path = os.getcwd()
+
+    main_gui(dir_path, args.title)

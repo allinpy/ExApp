@@ -1,4 +1,4 @@
 if __name__ == '__main__':
-    from .main_cli import main as run
+    from exapp.ExampleApp import main_cli as run
 
     run()
